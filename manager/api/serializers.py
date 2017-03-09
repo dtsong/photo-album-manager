@@ -2,8 +2,22 @@ from rest_framework import serializers
 from .models import Photo, Album
 
 
+class PhotoSerializer(serializers.ModelSerializer):
+    album = serializers.ReadOnlyField(source='album.id')
+
+    class Meta:
+        model = Photo
+        fields = ('id', 'title', 'album', 'photoUrl', 'thumbnailUrl')
+        depth = 1
+
+
+class AlbumPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    def display_value(self, instance):
+        return 'Album: %s' % (instance.title)
+
+
 class AlbumSerializer(serializers.ModelSerializer):
-    photos = serializers.HyperlinkedRelatedField(many=True, view_name='photo-detail', read_only=True)
+    photos = PhotoSerializer(many=True)
 
     class Meta:
         model = Album
@@ -32,13 +46,3 @@ class AlbumSerializer(serializers.ModelSerializer):
                           photoUrl=photo['photoUrl'], thumbnailUrl=photo['thumbnailUrl'])
             photo.save()
         return instance
-
-
-
-class PhotoSerializer(serializers.ModelSerializer):
-    album = serializers.ReadOnlyField(source='album.id')
-
-    class Meta:
-        model = Photo
-        fields = ('id', 'title', 'album', 'photoUrl', 'thumbnailUrl')
-        depth = 1
