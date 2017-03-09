@@ -1,5 +1,5 @@
-from .models import Photo
-from .serializers import PhotoSerializer
+from .models import Photo, Album
+from .serializers import PhotoSerializer, AlbumSerializer
 from rest_framework import generics
 
 
@@ -11,3 +11,13 @@ class PhotoList(generics.ListCreateAPIView):
 class PhotoDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
+
+
+class AlbumList(generics.ListCreateAPIView):
+    queryset = Album.objects.all()
+    serializer_class = AlbumSerializer
+
+
+class AlbumDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Album.objects.all()
+    serializer_class = AlbumSerializer
