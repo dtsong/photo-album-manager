@@ -1,3 +1,7 @@
+# Custom .gitignore files
+.idea/
+teradata/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
