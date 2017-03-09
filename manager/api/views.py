@@ -1,21 +1,22 @@
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from .models import Photo
 from .serializers import PhotoSerializer
+from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 
-@api_view(['GET', 'POST'])
-def photo_list(request, format=None):
+
+class PhotoList(APIView):
     """
     List all photos, or create a new photo.
     """
-    if request.method == 'GET':
+    def get(self, request, format=None):
         photos = Photo.objects.all()
         serializer = PhotoSerializer(photos, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request, format=None):
         serializer = PhotoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -23,27 +24,27 @@ def photo_list(request, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def photo_detail(request, pk, format=None):
+class PhotoDetail(APIView):
     """
     Retrieve, update or delete a photo instance.
     """
-    try:
-        photo = Photo.objects.get(pk=pk)
-    except Photo.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    def get_object(self, pk):
+        try:
+            return Photo.objects.get(pk=pk)
+        except Photo.DoesNotExist:
+            raise Http404
 
-    if request.method == 'GET':
+    def get(self, request, pk, format=None):
+        photo = self.get_object(pk)
         serializer = PhotoSerializer(photo)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
-        serializer = PhotoSerializer(photo, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, pk, format=None):
+        photo = self.get_object(pk)
+        serializer = PhotoSerializer(photo)
+        return Response(serializer.data)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk, format=None):
+        photo = self.get_object(pk)
         photo.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
