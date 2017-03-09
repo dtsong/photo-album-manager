@@ -6,7 +6,7 @@ from .serializers import PhotoSerializer
 
 
 @api_view(['GET', 'POST'])
-def photo_list(request):
+def photo_list(request, format=None):
     """
     List all photos, or create a new photo.
     """
@@ -24,7 +24,7 @@ def photo_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def photo_detail(request, pk):
+def photo_detail(request, pk, format=None):
     """
     Retrieve, update or delete a photo instance.
     """
