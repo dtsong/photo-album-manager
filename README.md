@@ -19,3 +19,4 @@ $ source teradata/bin/activate
 $ pip install -r requirements.txt
 ```
 
+You may begin! Feel free to message if any issues arise.
