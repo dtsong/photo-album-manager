@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Photo, Album
+from django.contrib.auth.models import User
 
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -15,3 +16,11 @@ class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
         fields = ('id', 'title', 'photos')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    albums = serializers.PrimaryKeyRelatedField(many=True, queryset=Album.objects.all())
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'albums')
