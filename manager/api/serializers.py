@@ -2,23 +2,25 @@ from rest_framework import serializers
 from .models import Photo, Album
 
 
-class PhotoSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Photo
-        fields = ('title', 'photoUrl', 'thumbnailUrl')
-
-
-class AlbumSerializer(serializers.ModelSerializer):
-    photos = PhotoSerializer(many=True)
+class AlbumListSerializer(serializers.HyperlinkedModelSerializer):
+    photos = serializers.RelatedField(many=True, queryset=Photo.objects.all())
 
     class Meta:
         model = Album
-        fields = ('title', 'photos')
+        fields = ('id', 'url', 'title', 'photos')
 
-    def create(self, validated_data):
-        photos_data = validated_data.pop('photos')
-        album = Album.objects.create(**validated_data)
-        for photo_data in photos_data:
-            Photo.objects.create(album=album, **photo_data)
-        return album
+
+class AlbumDetailSerializer(serializers.HyperlinkedModelSerializer):
+    photos = serializers.HyperlinkedRelatedField(many=True, queryset=Photo.objects.all(), view_name='photo-detail')
+
+    class Meta:
+        model = Album
+        fields = ('id', 'title', 'photos')
+
+
+class PhotoSerializer(serializers.ModelSerializer):
+    album = serializers.Field(source='album.id')
+
+    class Meta:
+        model = Photo
+        fields = ('id', 'album', 'title', 'url', 'thumbnailUrl')
