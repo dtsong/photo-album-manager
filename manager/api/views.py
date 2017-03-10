@@ -1,5 +1,6 @@
 from .models import Photo, Album
 from django.contrib.auth.models import User
+from .permissions import IsOwnerOrReadOnly
 from .serializers import PhotoSerializer, AlbumSerializer, UserSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -96,7 +97,8 @@ class AlbumDetail(APIView):
     """
     GET, PUT, or DELETE an Album instance.
     """
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly)
 
     def get_object(self, pk):
         try:
