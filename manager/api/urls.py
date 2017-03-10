@@ -1,14 +1,13 @@
-from django.conf.urls import url
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.conf.urls import url, include
 from . import views
+from rest_framework import routers
+
+
+router = routers.DefaultRouter()
+router.register(r'photos', views.PhotoViewSet)
+router.register(r'albums', views.AlbumViewSet)
 
 # API Endpoints
 urlpatterns = [
-    url(r'^$', views.api_root),
-    url(r'^photos/$', views.PhotoList.as_view(), name='photo-list'),
-    url(r'^photos/(?P<pk>[0-9]+)/$', views.PhotoDetail.as_view(), name='photo-detail'),
-    url(r'^albums/$', views.AlbumList.as_view(), name='album-list'),
-    url(r'^albums/(?P<pk>[0-9]+)/$', views.AlbumDetail.as_view(), name='album-detail'),
+    url(r'^', include(router.urls)),
 ]
-
-urlpatterns = format_suffix_patterns(urlpatterns)
