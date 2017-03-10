@@ -1,18 +1,21 @@
 from .models import Photo, Album
-from .serializers import PhotoSerializer, AlbumSerializer
+from django.contrib.auth.models import User
+from .serializers import PhotoSerializer, AlbumSerializer, UserSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import status
+from rest_framework import generics
 
 
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
         'albums': reverse('album-list', request=request, format=format),
-        'photos': reverse('photo-list', request=request, format=format)
+        'photos': reverse('photo-list', request=request, format=format),
+        'users': reverse('user-list', request=request, format=format)
     })
 
 
@@ -111,3 +114,21 @@ class AlbumDetail(APIView):
             return Response({'status': 'Album has photos!'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             album.delete()
+
+
+class UserList(generics.ListAPIView):
+    """
+    Use a generic ListAPIView solely for listing Users,
+    No need to setup POST due to Django's built-in User model and forms.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    """
+    Use a RetrieveAPIView to view related Django User data
+    as defined by UserSerializer
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
