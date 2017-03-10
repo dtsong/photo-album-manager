@@ -10,7 +10,8 @@ class PhotoSerializer(serializers.ModelSerializer):
 
 
 class AlbumSerializer(serializers.ModelSerializer):
+    photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Album
-        fields = ('id', 'title')
+        fields = ('id', 'title', 'photos')

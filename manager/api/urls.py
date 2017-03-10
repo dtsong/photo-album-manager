@@ -1,13 +1,11 @@
-from django.conf.urls import url, include
+from django.conf.urls import url
 from . import views
-from rest_framework import routers
 
-
-router = routers.DefaultRouter()
-router.register(r'photos', views.PhotoViewSet)
-router.register(r'albums', views.AlbumViewSet)
 
 # API Endpoints
 urlpatterns = [
-    url(r'^', include(router.urls)),
+    url(r'^albums/$', views.AlbumList.as_view()),
+    url(r'^albums/(?P<pk>[0-9]+)/$', views.AlbumDetail.as_view()),
+    url(r'^photos/$', views.PhotoList.as_view()),
+    url(r'^photos/(?P<pk>[0-9]+)/$', views.PhotoDetail.as_view()),
 ]
