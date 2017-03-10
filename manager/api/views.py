@@ -39,12 +39,16 @@ class PhotoList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class PhotoDetail(APIView):
     """
     "GET, PUT, or DELETE a Photo instance.
     """
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly)
 
     def get_object(self, pk):
         try:
