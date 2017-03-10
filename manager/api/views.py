@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import status
 from rest_framework import generics
+from rest_framework import permissions
 
 
 @api_view(['GET'])
@@ -23,6 +24,8 @@ class PhotoList(APIView):
     """
     GET all Photos, or POST a new Photo
     """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     def get(self, request, format=None):
         photos = Photo.objects.all()
         serializer = PhotoSerializer(photos, many=True)
@@ -40,6 +43,8 @@ class PhotoDetail(APIView):
     """
     "GET, PUT, or DELETE a Photo instance.
     """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     def get_object(self, pk):
         try:
             return Photo.objects.get(pk=pk)
@@ -69,6 +74,8 @@ class AlbumList(APIView):
     """
     GET all Albums, or POST a new Album.
     """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     def get(self, request, format=None):
         albums = Album.objects.all()
         serializer = AlbumSerializer(albums, many=True)
@@ -89,6 +96,8 @@ class AlbumDetail(APIView):
     """
     GET, PUT, or DELETE an Album instance.
     """
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
     def get_object(self, pk):
         try:
             return Album.objects.get(pk=pk)
