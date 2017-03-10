@@ -12,10 +12,11 @@ class PhotoSerializer(serializers.ModelSerializer):
 
 class AlbumSerializer(serializers.ModelSerializer):
     photos = PhotoSerializer(many=True, read_only=True)
+    user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = Album
-        fields = ('id', 'title', 'photos')
+        fields = ('id', 'title', 'user', 'photos')
 
 
 class UserSerializer(serializers.ModelSerializer):
