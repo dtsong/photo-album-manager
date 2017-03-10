@@ -6,14 +6,15 @@ class PhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Photo
-        fields = ('id', 'title', 'album', 'photoUrl', 'thumbnailUrl')
+        fields = ('title', 'album', 'photoUrl', 'thumbnailUrl')
+
 
 class AlbumSerializer(serializers.ModelSerializer):
     photos = PhotoSerializer(many=True, source='photo_set')
 
     class Meta:
         model = Album
-        fields = ('id', 'title', 'photos')
+        fields = ('title', 'photos')
 
     def create(self, validated_data):
         photos_data = validated_data.pop('photos')
