@@ -6,7 +6,7 @@ class PhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Photo
-        fields = ('title', 'url', 'thumbnailUrl')
+        fields = ('title', 'photoUrl', 'thumbnailUrl')
 
 
 class AlbumSerializer(serializers.ModelSerializer):

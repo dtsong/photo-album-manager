@@ -8,5 +8,5 @@ class Album(models.Model):
 class Photo(models.Model):
     album = models.ForeignKey(Album, related_name='photos', on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    url = models.URLField()
+    photoUrl = models.URLField()
     thumbnailUrl = models.URLField()
