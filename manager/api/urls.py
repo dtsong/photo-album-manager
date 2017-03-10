@@ -4,8 +4,8 @@ from . import views
 
 # API Endpoints
 urlpatterns = [
-    url(r'^albums/$', views.AlbumList.as_view()),
+    url(r'^albums/$', views.AlbumList, name='album-list'),
     url(r'^albums/(?P<pk>[0-9]+)/$', views.AlbumDetail.as_view()),
-    url(r'^photos/$', views.PhotoList.as_view()),
+    url(r'^photos/$', views.PhotoList, name='photos-list'),
     url(r'^photos/(?P<pk>[0-9]+)/$', views.PhotoDetail.as_view()),
 ]

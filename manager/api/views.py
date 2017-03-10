@@ -5,8 +5,15 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework import viewsets, generics
 from rest_framework import status
+
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'albums': reverse('album-list', request=request, format=format),
+        'photos': reverse('photo-list', request=request, format=format)
+    })
 
 
 class PhotoList(APIView):
@@ -104,57 +111,3 @@ class AlbumDetail(APIView):
             return Response({'status': 'Album has photos!'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             album.delete()
-
-
-# @api_view(['GET'])
-# def api_root(request, format=None):
-#     return Response({
-#         'albums': reverse('album-list', request=request, format=format),
-#         'photos': reverse('photo-list', request=request, format=format)
-#     })
-
-
-
-
-# class PhotoViewSet(viewsets.ModelViewSet):
-#     queryset = Photo.objects.all()
-#     serializer_class = PhotoSerializer
-
-
-# class AlbumViewSet(viewsets.ModelViewSet):
-#     queryset = Album.objects.all()
-#     serializer_class = AlbumSerializer
-#
-#     """
-#     Prevent DELETE of Album with associated Photo
-#     """
-#     def destroy(self, request, *args, **kwargs):
-#         if self.photos.exists():
-#             return Response({'status': 'Album has photos!'}, status=status.HTTP_400_BAD_REQUEST)
-#         else:
-#             self.destroy(request, *args, **kwargs)
-
-
-# class AlbumList(generics.ListCreateAPIView):
-#     queryset = Album.objects.all()
-#     serializer_class = AlbumSerializer
-#
-#
-# class AlbumDetail(generics.RetrieveUpdateDestroyAPIView):
-#     """
-#     Retrieve, update or delete an album instance.
-#     """
-#     queryset = Album.objects.all()
-#     serializer_class = AlbumSerializer
-#
-#     def get(self, request, *args, **kwargs):
-#         return self.retrieve(request, *args, **kwargs)
-#
-#     def put(self, request, *args, **kwargs):
-#         return self.update(request, *args, **kwargs)
-#
-#     def destroy(self, request, *args, **kwargs):
-#         if self.photos.exists():
-#             return Response({'status': 'Album has photos!'}, status=status.HTTP_400_BAD_REQUEST)
-#         else:
-#             self.destroy(request, *args, **kwargs)
