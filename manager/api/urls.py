@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from . import views
 
 
-# API Endpoints
+# API Endpoints for Albums, Photos, and Users
 urlpatterns = [
     url(r'^$', views.api_root),
     url(r'^albums/$', views.AlbumList.as_view(), name='album-list'),
@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
 ]
 
-# Login and logout views for the browsable API
+# Login and logout views for the browse-able API
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
