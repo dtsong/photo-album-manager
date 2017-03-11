@@ -45,37 +45,13 @@ class AlbumList(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class AlbumDetail(APIView):
-    """
-    GET, PUT, or DELETE an Album instance.
-    """
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly)
+class AlbumDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Album.objects.all()
+    serializer_class = AlbumSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def get_object(self, pk):
-        try:
-            return Album.objects.get(pk=pk)
-        except Album.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        album = self.get_object(pk)
-        serializer = AlbumSerializer(album)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        album = self.get_object(pk)
-        serializer = AlbumSerializer(album, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    """
-    Prevent DELETE of Album if there are associated Photos
-    """
-    def delete(self, request, pk, format=None):
-        album = self.get_object(pk)
+    def delete(self, request, *args, **kwargs):
+        album = self.get_object()
         if album.photos.exists():
             return Response({'status': 'Album has photos!'}, status=status.HTTP_400_BAD_REQUEST)
         else:
