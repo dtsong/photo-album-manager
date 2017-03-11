@@ -21,8 +21,8 @@ class AlbumSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    albums = serializers.PrimaryKeyRelatedField(many=True, queryset=Album.objects.all())
-    photos = serializers.PrimaryKeyRelatedField(many=True, queryset=Photo.objects.all())
+    albums = AlbumSerializer(many=True, read_only=True)
+    photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = User

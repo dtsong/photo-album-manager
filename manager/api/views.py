@@ -23,7 +23,7 @@ def api_root(request, format=None):
 
 class PhotoList(APIView):
     """
-    GET all Photos, or POST a new Photo
+    GET all Photos
     """
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
@@ -32,20 +32,10 @@ class PhotoList(APIView):
         serializer = PhotoSerializer(photos, many=True)
         return Response(serializer.data)
 
-    def post(self, request, format=None):
-        serializer = PhotoSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
 
 class PhotoDetail(APIView):
     """
-    "GET, PUT, or DELETE a Photo instance.
+    "GET, POST, PUT, or DELETE a Photo instance.
     """
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly)
@@ -61,6 +51,25 @@ class PhotoDetail(APIView):
         serializer = PhotoSerializer(photo)
         return Response(serializer.data)
 
+    """
+    Create a new Photo instance.
+    """
+    def post(self, request, format=None):
+        serializer = PhotoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    """
+    Associate the Photo with the User
+    """
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    """
+    Update the Photo instance
+    """
     def put(self, request, pk, format=None):
         photo = self.get_object(pk)
         serializer = PhotoSerializer(photo, data=request.data)
