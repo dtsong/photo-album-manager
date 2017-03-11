@@ -3,7 +3,7 @@ from .models import Photo, Album
 from django.contrib.auth.models import User
 
 
-class PhotoSerializer(serializers.ModelSerializer):
+class PhotoSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
@@ -11,18 +11,18 @@ class PhotoSerializer(serializers.ModelSerializer):
         fields = ('id', 'album', 'user', 'title', 'url', 'thumbnailUrl')
 
 
-class AlbumSerializer(serializers.ModelSerializer):
+class AlbumSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
-    photos = PhotoSerializer(many=True, read_only=True)
+    photos = serializers.HyperlinkedRelatedField(many=True, view_name='photo-detail', read_only=True)
 
     class Meta:
         model = Album
         fields = ('id', 'title', 'user', 'photos')
 
 
-class UserSerializer(serializers.ModelSerializer):
-    albums = AlbumSerializer(many=True, read_only=True)
-    photos = PhotoSerializer(many=True, read_only=True)
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    albums = serializers.HyperlinkedRelatedField(many=True, view_name='album-detail', read_only=True)
+    photos = serializers.HyperlinkedRelatedField(many=True, view_name='photo-detail', read_only=True)
 
     class Meta:
         model = User
