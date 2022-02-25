@@ -1,6 +1,6 @@
 appdirs==1.4.3
 Django==2.2.27
-djangorestframework==3.5.4
+djangorestframework==3.11.2
 httpie==1.0.3
 packaging==16.8
 Pygments==2.7.4
