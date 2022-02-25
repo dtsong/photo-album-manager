@@ -3,7 +3,7 @@ Django==1.10.6
 djangorestframework==3.5.4
 httpie==0.9.9
 packaging==16.8
-Pygments==2.2.0
+Pygments==2.7.4
 pyparsing==2.2.0
 requests==2.13.0
 six==1.10.0
